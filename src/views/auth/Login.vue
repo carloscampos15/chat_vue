@@ -34,6 +34,7 @@
 
 <script>
 import { required, email } from "vuelidate/lib/validators";
+import router from '@/router/index';
 export default {
   name: "Login",
   components: {},
@@ -71,7 +72,12 @@ export default {
           password: that.password
         })
         .then(function(response) {
-          console.log(response);
+          var user = response.data.user;
+          user.token = response.data.token;
+
+          localStorage.setItem('user', JSON.stringify(user));
+
+          router.push('home')
           that.$store.state.showOverlay = false;
         })
         .catch(function(error) {

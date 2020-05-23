@@ -1,11 +1,11 @@
 <template>
-    <div>vista home</div>
+  <div>vista welcome</div>
 </template>
 
 <script>
 
 export default {
-  name: 'Home',
+  name: 'Welcome',
   components: {}
 }
 </script>

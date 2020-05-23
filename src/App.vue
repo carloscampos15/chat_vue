@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import Navbar from './components/NavBar';
-import OverLay from './components/OverLay';
+import Navbar from '@/components/NavBar';
+import OverLay from '@/components/OverLay';
 export default {
   components: {
     Navbar,
