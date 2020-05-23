@@ -2,54 +2,96 @@
   <b-row class="justify-content-center div-center" align-v="center">
     <b-col col md="8">
       <b-card class="shadow-sm">
-        <b-form>
+        <b-form ref="form" @submit.stop.prevent="handleSubmit">
           <b-form-group>
             <h2 class="text-center">Registro</h2>
           </b-form-group>
           <b-row>
             <b-col>
-              <b-form-group label="Nombres" label-for="input-1">
-                <b-form-input id="input-1" type="text" required placeholder="Nombres"></b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="Apellidos" label-for="input-2">
-                <b-form-input id="input-2" type="text" required placeholder="Apellidos"></b-form-input>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col col md="4">
-              <b-form-group label="Pais" label-for="input-3">
-                <b-form-select id="input-3" required></b-form-select>
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="Correo electrónico" label-for="input-4">
-                <b-form-input id="input-4" type="email" required placeholder="Correo electrónico"></b-form-input>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-form-group label="Contraseña" label-for="input-5">
-                <b-form-input id="input-5" type="password" required placeholder="Contraseña"></b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="Confirmar contraseña" label-for="input-5">
+              <b-form-group label="Nombres" label-for="input-name">
                 <b-form-input
-                  id="input-6"
+                  v-model="name"
+                  id="input-name"
+                  type="text"
+                  required
+                  placeholder="Nombres"
+                ></b-form-input>
+                <div class="error" v-if="!$v.name.required">Campo requerido.</div>
+                <div
+                  class="error"
+                  v-if="!$v.name.minLength"
+                >Los nombres debe tener al menos {{$v.name.$params.minLength.min}} letras.</div>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Apellidos" label-for="input-lastname">
+                <b-form-input
+                  v-model="lastname"
+                  id="input-lastname"
+                  type="text"
+                  required
+                  placeholder="Apellidos"
+                ></b-form-input>
+                <div class="error" v-if="!$v.lastname.required">Campo requerido.</div>
+                <div
+                  class="error"
+                  v-if="!$v.lastname.minLength"
+                >Los apellidos debe tener al menos {{$v.lastname.$params.minLength.min}} letras.</div>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-form-group label="Correo electrónico" label-for="input-email">
+                <b-form-input
+                  v-model="email"
+                  id="input-email"
+                  type="email"
+                  required
+                  placeholder="Correo electrónico"
+                ></b-form-input>
+                <div class="error" v-if="!$v.email.required">Campo requerido.</div>
+                <div class="error" v-if="!$v.email.email">Email invalido.</div>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-form-group label="Contraseña" label-for="input-password">
+                <b-form-input
+                  v-model="password"
+                  id="input-password"
                   type="password"
                   required
+                  placeholder="Contraseña"
+                ></b-form-input>
+                <div class="error" v-if="!$v.password.required">Campo requerido.</div>
+                <div
+                  class="error"
+                  v-if="!$v.password.minLength"
+                >La contraseña debe tener al menos {{$v.password.$params.minLength.min}} letras.</div>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="Confirmar contraseña" label-for="input-password-confirmation">
+                <b-form-input
+                  id="input-password-confirmation"
+                  type="password"
+                  required
+                  v-model="passwordConfirmation"
                   placeholder="Confirmar contraseña"
                 ></b-form-input>
+                <div class="error" v-if="!$v.passwordConfirmation.required">Campo requerido.</div>
+                <div
+                  class="error"
+                  v-if="!$v.passwordConfirmation.sameAsPassword"
+                >Las contraseñas deben coincidir.</div>
               </b-form-group>
             </b-col>
           </b-row>
           <b-form-group>
             <b-col col md="4" class="offset-md-4">
-              <b-button type="submit" block variant="primary">Registro</b-button>
+              <b-button @click="handleRegister" block variant="primary">Registro</b-button>
             </b-col>
           </b-form-group>
         </b-form>
@@ -59,15 +101,85 @@
 </template>
 
 <script>
+import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 export default {
   name: "Register",
-  components: {}
+  components: {},
+  data() {
+    return {
+      name: null,
+      lastname: null,
+      email: null,
+      password: null,
+      passwordConfirmation: null
+    };
+  },
+  validations: {
+    name: {
+      required,
+      minLength: minLength(5)
+    },
+    lastname: {
+      required,
+      minLength: minLength(5)
+    },
+    email: {
+      required,
+      email
+    },
+    password: {
+      required,
+      minLength: minLength(6)
+    },
+    passwordConfirmation: {
+      required,
+      sameAsPassword: sameAs("password")
+    }
+  },
+  methods: {
+    handleRegister(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.handleSubmit();
+    },
+    handleSubmit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      this.$store.state.showOverlay = true;
+      // var that = this;
+      // axios
+      //   .post(
+      //     "http://oa-uam.com/api/learningobjectapi/" +
+      //       this.$store.state.learningoid +
+      //       "/learningsectionapi/" +
+      //       this.$store.state.learningp_view.learning_section_id +
+      //       "/learningpageapi/" +
+      //       this.$store.state.learningp_view.id +
+      //       "/blockapi",
+      //     {
+      //       fragments: this.cols
+      //     }
+      //   )
+      //   .then(function(response) {
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error.response);
+      //   });
+    }
+  }
 };
 </script>
 
 <style scoped>
 .div-center {
   height: 70vh;
+}
+
+.error {
+  display: block;
+  color: #f57f6c;
+  font-size: 12px;
 }
 </style>
 

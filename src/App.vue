@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Navbar></Navbar>
+    <OverLay/>
+    <Navbar/>
     <b-container>
       <router-view/>
     </b-container>
@@ -9,9 +10,11 @@
 
 <script>
 import Navbar from './components/NavBar';
+import OverLay from './components/OverLay';
 export default {
   components: {
-    Navbar
+    Navbar,
+    OverLay
   }
 }
 </script>
