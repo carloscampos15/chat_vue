@@ -7,9 +7,17 @@
             <h2 class="text-center">Acceder</h2>
           </b-form-group>
           <b-form-group>
-            <b-form-input type="email" v-model="email" placeholder="Correo electrónico" trim required></b-form-input>
+            <b-form-input
+              type="email"
+              v-model="email"
+              placeholder="Correo electrónico"
+              trim
+              required
+              @keyup="emailState = false"
+            ></b-form-input>
             <div class="error" v-if="!$v.email.required">Campo requerido.</div>
             <div class="error" v-if="!$v.email.email">Email invalido.</div>
+            <div class="error" v-if="emailState == true">Email invalido.</div>
           </b-form-group>
           <b-form-group>
             <b-form-input type="password" v-model="password" placeholder="Contraseña" trim required></b-form-input>
@@ -32,7 +40,8 @@ export default {
   data() {
     return {
       email: null,
-      password: null
+      password: null,
+      emailState: false
     };
   },
   validations: {
@@ -54,26 +63,22 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
-      this.$store.state.showOverlay = true;
-      // var that = this;
-      // axios
-      //   .post(
-      //     "http://oa-uam.com/api/learningobjectapi/" +
-      //       this.$store.state.learningoid +
-      //       "/learningsectionapi/" +
-      //       this.$store.state.learningp_view.learning_section_id +
-      //       "/learningpageapi/" +
-      //       this.$store.state.learningp_view.id +
-      //       "/blockapi",
-      //     {
-      //       fragments: this.cols
-      //     }
-      //   )
-      //   .then(function(response) {
-      //   })
-      //   .catch(function(error) {
-      //     console.log(error.response);
-      //   });
+      var that = this;
+      that.$store.state.showOverlay = true;
+      axios
+        .post("api/auth/login", {
+          email: that.email,
+          password: that.password
+        })
+        .then(function(response) {
+          console.log(response);
+          that.$store.state.showOverlay = false;
+        })
+        .catch(function(error) {
+          console.log(error.response);
+          that.emailState = true;
+          that.$store.state.showOverlay = false;
+        });
     }
   }
 };

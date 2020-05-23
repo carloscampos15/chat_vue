@@ -49,9 +49,11 @@
                   type="email"
                   required
                   placeholder="Correo electrónico"
+                  @keyup="emailState = false"
                 ></b-form-input>
                 <div class="error" v-if="!$v.email.required">Campo requerido.</div>
                 <div class="error" v-if="!$v.email.email">Email invalido.</div>
+                <div class="error" v-if="emailState == true">Este email ya se encuentra registrado.</div>
               </b-form-group>
             </b-col>
           </b-row>
@@ -111,7 +113,8 @@ export default {
       lastname: null,
       email: null,
       password: null,
-      passwordConfirmation: null
+      passwordConfirmation: null,
+      emailState: false
     };
   },
   validations: {
@@ -146,26 +149,24 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
-      this.$store.state.showOverlay = true;
-      // var that = this;
-      // axios
-      //   .post(
-      //     "http://oa-uam.com/api/learningobjectapi/" +
-      //       this.$store.state.learningoid +
-      //       "/learningsectionapi/" +
-      //       this.$store.state.learningp_view.learning_section_id +
-      //       "/learningpageapi/" +
-      //       this.$store.state.learningp_view.id +
-      //       "/blockapi",
-      //     {
-      //       fragments: this.cols
-      //     }
-      //   )
-      //   .then(function(response) {
-      //   })
-      //   .catch(function(error) {
-      //     console.log(error.response);
-      //   });
+      var that = this;
+      that.$store.state.showOverlay = true;
+      axios
+        .post("api/auth/register", {
+          name: that.name,
+          lastname: that.lastname,
+          email: that.email,
+          password: that.password
+        })
+        .then(function(response) {
+          console.log(response);
+          that.$store.state.showOverlay = false;
+        })
+        .catch(function(error) {
+          console.log(error.response);
+          that.emailState = true;
+          that.$store.state.showOverlay = false;
+        });
     }
   }
 };
