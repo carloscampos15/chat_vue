@@ -104,6 +104,7 @@
 
 <script>
 import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
+import router from "@/router/index";
 export default {
   name: "Register",
   components: {},
@@ -145,28 +146,19 @@ export default {
       this.handleSubmit();
     },
     handleSubmit() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+      var that = this;
+      that.$v.$touch();
+      if (that.$v.$invalid) {
         return;
       }
-      var that = this;
-      that.$store.state.showOverlay = true;
-      axios
-        .post("api/auth/register", {
-          name: that.name,
-          lastname: that.lastname,
-          email: that.email,
-          password: that.password
-        })
-        .then(function(response) {
-          console.log(response);
-          that.$store.state.showOverlay = false;
-        })
-        .catch(function(error) {
-          console.log(error.response);
-          that.emailState = true;
-          that.$store.state.showOverlay = false;
-        });
+      var name = this.name;
+      var lastname = this.lastname;
+      var email = this.email;
+      var password = this.password;
+      that.$store
+        .dispatch("register", { name, lastname, email, password })
+        .then(() => router.push("home"))
+        .catch(err => (console.log(err)));
     }
   }
 };

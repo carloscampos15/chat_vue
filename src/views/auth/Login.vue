@@ -34,7 +34,7 @@
 
 <script>
 import { required, email } from "vuelidate/lib/validators";
-import router from '@/router/index';
+import router from "@/router/index";
 export default {
   name: "Login",
   components: {},
@@ -60,31 +60,17 @@ export default {
       this.handleSubmit();
     },
     handleSubmit() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+      var that = this;
+      that.$v.$touch();
+      if (that.$v.$invalid) {
         return;
       }
-      var that = this;
-      that.$store.state.showOverlay = true;
-      axios
-        .post("api/auth/login", {
-          email: that.email,
-          password: that.password
-        })
-        .then(function(response) {
-          var user = response.data.user;
-          user.token = response.data.token;
-
-          localStorage.setItem('user', JSON.stringify(user));
-
-          router.push('home')
-          that.$store.state.showOverlay = false;
-        })
-        .catch(function(error) {
-          console.log(error.response);
-          that.emailState = true;
-          that.$store.state.showOverlay = false;
-        });
+      var email = that.email;
+      var password = that.password;
+      that.$store
+        .dispatch("login", { email, password })
+        .then(() => router.push("home"))
+        .catch(err => that.emailState = true);
     }
   }
 };

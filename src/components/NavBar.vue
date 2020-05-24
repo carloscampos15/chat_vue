@@ -6,12 +6,16 @@
 
       <b-collapse id="nav-collapse" is-nav class="text-center">
         <b-navbar-nav class="ml-auto" right>
-            <b-nav-item :to="{name: 'login'}" exact-active-class="active">Acceder</b-nav-item>
-            <b-nav-item :to="{name: 'register'}" exact-active-class="active">Registro</b-nav-item>
+          <b-nav-item v-if="!isLoggedIn" :to="{name: 'login'}" exact-active-class="active">Acceder</b-nav-item>
+          <b-nav-item
+            v-if="!isLoggedIn"
+            :to="{name: 'register'}"
+            exact-active-class="active"
+          >Registro</b-nav-item>
 
-            <b-nav-item-dropdown text="userName" right>
-              <b-dropdown-item>Logout</b-dropdown-item>
-            </b-nav-item-dropdown>
+          <b-nav-item-dropdown v-if="isLoggedIn" text="userName" right>
+            <b-dropdown-item>Logout</b-dropdown-item>
+          </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-container>
@@ -27,6 +31,11 @@ export default {
       userName: null,
       session: null
     };
+  },
+  computed: {
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn;
+    }
   }
 };
 </script>
