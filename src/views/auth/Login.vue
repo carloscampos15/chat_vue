@@ -17,7 +17,7 @@
             ></b-form-input>
             <div class="error" v-if="!$v.email.required">Campo requerido.</div>
             <div class="error" v-if="!$v.email.email">Email invalido.</div>
-            <div class="error" v-if="emailState == true">Email invalido.</div>
+            <div class="error" v-if="emailState == true">La información suministrada no coincide.</div>
           </b-form-group>
           <b-form-group>
             <b-form-input type="password" v-model="password" placeholder="Contraseña" trim required></b-form-input>
@@ -69,7 +69,7 @@ export default {
       var password = that.password;
       that.$store
         .dispatch("login", { email, password })
-        .then(() => router.push("home"))
+        .then(() => router.push("messages"))
         .catch(err => that.emailState = true);
     }
   }

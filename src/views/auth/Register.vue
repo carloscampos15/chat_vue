@@ -157,7 +157,7 @@ export default {
       var password = this.password;
       that.$store
         .dispatch("register", { name, lastname, email, password })
-        .then(() => router.push("home"))
+        .then(() => router.push("messages"))
         .catch(err => (console.log(err)));
     }
   }

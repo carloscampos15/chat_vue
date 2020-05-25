@@ -1,22 +1,24 @@
 <template>
   <div id="app">
-    <OverLay/>
-    <Navbar/>
-    <b-container>
-      <router-view/>
-    </b-container>
+    <OverLay />
+    <Navbar />
+    <main class="py-4">
+      <b-container>
+        <router-view />
+      </b-container>
+    </main>
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/NavBar';
-import OverLay from '@/components/OverLay';
+import Navbar from "@/components/NavBar";
+import OverLay from "@/components/OverLay";
 export default {
   components: {
     Navbar,
     OverLay
   }
-}
+};
 </script>
 
 <style>

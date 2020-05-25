@@ -13,8 +13,13 @@
             exact-active-class="active"
           >Registro</b-nav-item>
 
-          <b-nav-item-dropdown v-if="isLoggedIn" text="userName" right>
-            <b-dropdown-item>Logout</b-dropdown-item>
+          <b-nav-item-dropdown v-if="isLoggedIn" text="mensajes" right>
+            <b-dropdown-item :to="{name: 'createMessage'}" exact-active-class="active">Crear</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'inboxMessage'}" exact-active-class="active">Recibidos</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'outboxMessage'}" exact-active-class="active">Enviados</b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item-dropdown v-if="isLoggedIn" :text="user.name + ' ' + user.lastname" right>
+            <b-dropdown-item @click="logout">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -23,6 +28,7 @@
 </template>
 
 <script>
+import router from "@/router/index";
 export default {
   name: "NavBar",
   props: {},
@@ -35,6 +41,17 @@ export default {
   computed: {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn;
+    },
+    user: function() {
+      var user = JSON.parse(localStorage.getItem("user"));
+      return user;
+    }
+  },
+  methods: {
+    logout: function() {
+      this.$store.dispatch("logout").then(() => {
+        router.push("/login");
+      });
     }
   }
 };
