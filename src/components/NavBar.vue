@@ -1,7 +1,7 @@
 <template>
   <b-navbar toggleable="md" type="light" variant="light" class="bg-white shadow-sm">
     <b-container>
-      <b-navbar-brand :to="{name: 'welcome'}">DISTRIBUIDOS</b-navbar-brand>
+      <b-navbar-brand :to="{name: 'welcome'}">EMAIL 5000</b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav class="text-center">
@@ -13,11 +13,19 @@
             exact-active-class="active"
           >Registro</b-nav-item>
 
-          <b-nav-item-dropdown v-if="isLoggedIn" text="mensajes" right>
-            <b-dropdown-item :to="{name: 'createMessage'}" exact-active-class="active">Crear</b-dropdown-item>
-            <b-dropdown-item :to="{name: 'inboxMessage'}" exact-active-class="active">Recibidos</b-dropdown-item>
-            <b-dropdown-item :to="{name: 'outboxMessage'}" exact-active-class="active">Enviados</b-dropdown-item>
-          </b-nav-item-dropdown>
+          <div v-if="user">
+            <b-nav-item-dropdown v-if="isLoggedIn & user.role == 'USER'" text="mensajes" right>
+              <b-dropdown-item :to="{name: 'createMessage'}" exact-active-class="active">Crear</b-dropdown-item>
+              <b-dropdown-item :to="{name: 'inboxMessage'}" exact-active-class="active">Recibidos</b-dropdown-item>
+              <b-dropdown-item :to="{name: 'outboxMessage'}" exact-active-class="active">Enviados</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </div>
+          <div v-if="user">
+            <b-nav-item-dropdown v-if="isLoggedIn & user.role == 'ADMIN'" text="usuarios" right>
+              <b-dropdown-item :to="{name: 'createUser'}" exact-active-class="active">Crear</b-dropdown-item>
+              <b-dropdown-item :to="{name: 'users'}" exact-active-class="active">Listar</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </div>
           <b-nav-item-dropdown v-if="isLoggedIn" :text="user.name + ' ' + user.lastname" right>
             <b-dropdown-item @click="logout">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
@@ -43,7 +51,7 @@ export default {
       return this.$store.getters.isLoggedIn;
     },
     user: function() {
-      var user = JSON.parse(localStorage.getItem("user"));
+      var user = this.$store.getters.user;
       return user;
     }
   },

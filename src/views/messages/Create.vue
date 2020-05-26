@@ -84,13 +84,13 @@ export default {
           return resolve([]);
         }
         axios
-          .post("api/user/searchUsers", {
+          .post("api/users/search", {
             search: input,
             emails: that.emails
           })
           .then(function(response) {
             var data = [];
-            var user = JSON.parse(that.$store.state.user);
+            var user = that.$store.state.user;
             response.data.emails.forEach(element => {
               var bandera = true;
               that.emails.forEach(email => {

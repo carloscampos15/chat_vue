@@ -69,7 +69,13 @@ export default {
       var password = that.password;
       that.$store
         .dispatch("login", { email, password })
-        .then(() => router.push("messages"))
+        .then(() => {
+          if(that.$store.getters.user.role == "ADMIN"){
+            router.push("users");
+          }else{
+            router.push("messages");
+          }
+        })
         .catch(err => that.emailState = true);
     }
   }

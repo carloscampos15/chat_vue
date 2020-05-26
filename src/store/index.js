@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     showOverlay: false,
     status: "",
-    user: localStorage.getItem("user") || null,
+    user: JSON.parse(localStorage.getItem("user")) || null,
   },
   mutations: {
     auth_request(state) {

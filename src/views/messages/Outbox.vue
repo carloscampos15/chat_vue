@@ -16,16 +16,8 @@
           <b-col>{{message.subject}}</b-col>
           <b-col>{{message.created_at}}</b-col>
           <b-col class="text-right">
-            <b-button class="pt-0 pb-0 text-success" variant="link" v-b-tooltip.hover title="Ver">
+            <b-button class="pt-0 pb-0 text-success" variant="link" :to="'showSend/'+message._id" v-b-tooltip.hover title="Ver">
               <b-icon-eye></b-icon-eye>
-            </b-button>
-            <b-button
-              class="pt-0 pb-0 text-danger"
-              variant="link"
-              v-b-tooltip.hover
-              title="Eliminar"
-            >
-              <b-icon-trash></b-icon-trash>
             </b-button>
           </b-col>
         </b-row>
