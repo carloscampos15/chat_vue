@@ -9,6 +9,7 @@ import Register from '@/views/auth/Register'
 import InboxMessage from '@/views/messages/Inbox'
 import OutboxMessage from '@/views/messages/Outbox'
 import CreateMessage from '@/views/messages/Create'
+import ShowMessage from '@/views/messages/Show';
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,14 @@ Vue.use(VueRouter)
     path: '/messages/sent',
     name: 'outboxMessage',
     component: OutboxMessage,
+    meta: { 
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/messages/show/:message_id',
+    name: 'showMessage',
+    component: ShowMessage,
     meta: { 
       requiresAuth: true
     }

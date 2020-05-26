@@ -1,31 +1,18 @@
 <template>
   <div>
-    <h1 class="mb-3">Mensajes recibidos (Inbox)</h1>
-    <b-alert v-if="messages.length == 0" variant="success" show>No hay mensajes aun</b-alert>
-    <b-card
-      v-for="(message, index) in messages"
-      v-bind:key="index"
-      justified
-      class="shadow-sm mb-3"
-    >
-      <b-card-text class="text-justify">
+    <b-alert v-if="!message" variant="danger" show>No tienes permisos para acceder a este recurso.</b-alert>
+    <b-card v-if="message">
+      <b-form ref="form">
         <b-row>
           <b-col>
-            <b-icon icon="exclamation-circle-fill" class="mr-2" variant="primary"></b-icon>
-            <strong>{{message.sender_email}}</strong>
+            <b-form-group label="Enviado por:" label-for="enviado_por">
+              <strong>
+                <p>{{message.sender_email}}</p>
+              </strong>
+            </b-form-group>
           </b-col>
-          <b-col>{{message.subject}}</b-col>
-          <b-col>{{message.created_at}}</b-col>
           <b-col class="text-right">
-            <b-button
-              class="pt-0 pb-0 text-success"
-              :to="'messages/show/'+message._id"
-              variant="link"
-              v-b-tooltip.hover
-              title="Ver"
-            >
-              <b-icon-eye></b-icon-eye>
-            </b-button>
+            <b-form-group :label="'Enviado el: '+message.created_at" label-for="enviado_por"></b-form-group>
             <b-button
               class="pt-0 pb-0 text-primary"
               variant="link"
@@ -45,7 +32,15 @@
             </b-button>
           </b-col>
         </b-row>
-      </b-card-text>
+        <b-form-group label="Asunto:" label-for="asunto">
+          <strong>
+            <p>{{message.subject}}</p>
+          </strong>
+        </b-form-group>
+        <b-form-group label="Mensaje:" label-for="mensaje">
+          <p>{{message.body}}</p>
+        </b-form-group>
+      </b-form>
     </b-card>
   </div>
 </template>
@@ -53,21 +48,24 @@
 <script>
 import router from "@/router/index";
 export default {
-  name: "InboxMessage",
+  name: "ShowMessage",
   components: {},
   data() {
     return {
-      messages: []
+      message: null
     };
   },
   created: function() {
+    var message_id = this.$route.params.message_id;
     var that = this;
     that.$store.state.showOverlay = true;
     return new Promise(resolve => {
       axios
-        .get("api/message/inbox")
+        .post("api/message/show", {
+          message_id: message_id
+        })
         .then(function(response) {
-          that.messages = response.data.messages;
+          that.message = response.data.message;
           resolve(response);
           that.$store.state.showOverlay = false;
         })
@@ -87,7 +85,7 @@ export default {
           .then(function(response) {
             resolve(response);
             that.$store.state.showOverlay = false;
-            location.reload();
+            router.push("/messages");
           })
           .catch(function(error) {
             console.log(error);
