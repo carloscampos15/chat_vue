@@ -5,10 +5,13 @@
       <b-form ref="form">
         <b-row>
           <b-col>
-            <b-form-group label="Enviado para:" label-for="enviado_por">
-                <li v-for="(item, index) in message.receptors" v-bind:key="index">
+            <b-form-group label="Enviado para:" class="mb-0">
+              <strong v-for="(item, index) in message.receptors" v-bind:key="index">
+                <p>
+                  <b-icon icon="exclamation-circle-fill" class="mr-2" variant="primary"></b-icon>
                   <strong>{{item.email}}&nbsp;</strong>
-                </li>
+                </p>
+              </strong>
             </b-form-group>
           </b-col>
           <b-col class="text-right">
