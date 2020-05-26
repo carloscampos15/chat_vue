@@ -11,7 +11,7 @@
       <b-card-text class="text-justify">
         <b-row>
           <b-col>
-            <b-icon icon="exclamation-circle-fill" class="mr-2" variant="primary"></b-icon>
+            <b-icon v-if="message.state == 'RECIBIDO'" icon="exclamation-circle-fill" class="mr-2" variant="primary"></b-icon>
             <strong>{{message.sender_email}}</strong>
           </b-col>
           <b-col>{{message.subject}}</b-col>
